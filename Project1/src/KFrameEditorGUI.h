@@ -16,16 +16,16 @@ public:
 	KFrameEditorGUI();
 	KFrameEditorGUI(kFAnimMgr * mgr) :kFMgr(mgr) {}
 	~KFrameEditorGUI();
-	void Show(float deltaTime);
-
+	bool Show(float deltaTime);
+	int frameRate = 1;
+	bool editing = false;
+	bool playing = false;
 private:
 	kFAnimMgr  * kFMgr;
-	 int playbackSpeed = 1;
-	 float playingTime = 0.0f; 
+	 int updateCount = 0; 
 	 int playingStartFrame = 0;
-	 int frameSelected = 0; 
-	 bool editing = false; 
-	 bool playing = false;
+	 int frameSelected = 0;
+	 float timeSinceLastUpdate = 0;
 	 float  translate[3], scale[3] = { 1.0f,1.0f,1.0f }, rotate[3];
 };
 
@@ -51,13 +51,14 @@ KFrameEditorGUI::~KFrameEditorGUI()
 {
 }
 
-inline void KFrameEditorGUI::Show(float deltaTime)
+inline bool KFrameEditorGUI::Show(float deltaTime)
 {
+	bool updated = false;
 	ImGui::Begin("KeyFrame Editing", NULL, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth()*0.3f);
 	ImGui::InputInt("FrameNum", &kFMgr->frameCount); kFMgr->frameCount = max(0, kFMgr->frameCount);
 	ImGui::SameLine();
-	ImGui::InputInt("PlaySpeed", &playbackSpeed);
+	ImGui::InputInt("FrameRate", &frameRate);
 	ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 	ImGui::SliderInt("", &frameSelected, 0, kFMgr->frameCount-1);
 	ImGui::PlotHistogram("", &exist, (void *) new KFAinmMgr_State(kFMgr, frameSelected), kFMgr->frameCount);
@@ -71,26 +72,33 @@ inline void KFrameEditorGUI::Show(float deltaTime)
 	if (ImGui::Button("Play", ImVec2(ImGui::GetWindowContentRegionWidth()*0.5f, 20.0f))) {
 		playing = true;
 		playingStartFrame = frameSelected;
-		playingTime = 0;
+		updateCount = 0;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Pause", ImVec2(ImGui::GetWindowContentRegionWidth()*0.5f, 20.0f))) {
 		playing = false;
 	}
 	if (playing) {
-		playingTime += deltaTime;
-		frameSelected = playingStartFrame + playingTime*playbackSpeed;
+		timeSinceLastUpdate += deltaTime;
+		if (timeSinceLastUpdate > 1 / frameRate) {
+			timeSinceLastUpdate = 0;
+		}
+		if (timeSinceLastUpdate == 0) {
+			updateCount += 1;
+			updated = true;
+		}
+		frameSelected = playingStartFrame +updateCount;
 		if (frameSelected<0 || frameSelected>kFMgr->frameCount) {
 			playing = false;
 			frameSelected = std::max(0, std::min(frameSelected, kFMgr->frameCount));
 		}
 	}
-	//editing = ImGui::BeginPopupModal("KeyFrame Setting");
+
 	if (ImGui::BeginPopupModal("KeyFrame Setting")) {
 		editing = true;
 		ImGui::DragFloat3("Translate", translate, 1.0f, -50.0f, 50.0f);
 		ImGui::DragFloat3("Rotate", rotate, 1.0f, -180.0f, 180.0f);
-		ImGui::DragFloat3("Scale", scale, 0.1f, 0.1f, 4.0f);
+		//ImGui::DragFloat3("Scale", scale, 0.1f, 0.1f, 4.0f);
 		if (ImGui::Button("Confirm")) {
 			if (kFMgr->existFrame(frameSelected)) {
 				ImGui::OpenPopup("Exists!");
@@ -145,4 +153,6 @@ inline void KFrameEditorGUI::Show(float deltaTime)
 		ImGui::TreePop();
 	}
 	ImGui::End();
+
+	return updated;
 }

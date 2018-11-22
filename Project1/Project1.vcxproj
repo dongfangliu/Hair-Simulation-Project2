@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{647C9C1C-6EBE-4753-9147-FEF0A3AD2C80}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -125,10 +125,10 @@
     <ClInclude Include="3rdparty\imgui\include\imstb_rectpack.h" />
     <ClInclude Include="3rdparty\imgui\include\imstb_textedit.h" />
     <ClInclude Include="3rdparty\imgui\include\imstb_truetype.h" />
+    <ClInclude Include="inc\MathUtils.h" />
     <ClInclude Include="src\Hair\HairMSSovler.h" />
-    <ClInclude Include="src\BoundingShapes\BoundCapsule.h" />
+    <ClInclude Include="inc\BoundingShapes\BoundCapsule.h" />
     <ClInclude Include="src\Hair\HairStrand.h" />
-    <ClInclude Include="src\Hair\HairMassPoint.h" />
     <ClInclude Include="inc\Object.h" />
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\common.h" />
@@ -139,6 +139,7 @@
     <ClInclude Include="src\KeyFrame\kFAnimMgr.h" />
     <ClInclude Include="src\KeyFrame\kFrame.h" />
     <ClInclude Include="src\KFrameEditorGUI.h" />
+    <ClInclude Include="src\Hair\strandFake.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3rdparty\GLAD\src\glad.c" />
@@ -148,12 +149,13 @@
     <ClCompile Include="3rdparty\imgui\include\imgui_impl_glfw.cpp" />
     <ClCompile Include="3rdparty\imgui\include\imgui_impl_opengl3.cpp" />
     <ClCompile Include="3rdparty\imgui\include\imgui_widgets.cpp" />
-    <ClCompile Include="src\BoundingShapes\BoundCapsule.cpp" />
+    <ClCompile Include="inc\BoundingShapes\BoundCapsule.cpp" />
     <ClCompile Include="src\Hair\HairStrand.cpp" />
     <ClCompile Include="inc\Object.cpp" />
     <ClCompile Include="src\KeyFrame\kFAnimMgr.cpp" />
     <ClCompile Include="src\KeyFrame\kFrame.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Hair\strandFake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="3rdparty\assimp\lib\assimp.dll" />

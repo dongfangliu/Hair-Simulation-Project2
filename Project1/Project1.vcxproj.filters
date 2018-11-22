@@ -69,16 +69,19 @@
     <ClInclude Include="inc\Object.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hair\HairMassPoint.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hair\HairStrand.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\BoundingShapes\BoundCapsule.h">
+    <ClInclude Include="src\Hair\HairMSSovler.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hair\HairMSSovler.h">
+    <ClInclude Include="inc\BoundingShapes\BoundCapsule.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\MathUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hair\strandFake.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,16 +113,19 @@
     <ClCompile Include="3rdparty\imgui\include\imgui_widgets.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="inc\Object.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\Hair\HairStrand.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoundingShapes\BoundCapsule.cpp">
+    <ClCompile Include="inc\BoundingShapes\BoundCapsule.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hair\strandFake.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

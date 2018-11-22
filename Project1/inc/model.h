@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "stb_image.h"
 #include "Object.h"
+#include "BoundingShapes\BoundCapsule.h"
 class Model:public Object
 {
 public:
@@ -14,7 +15,9 @@ public:
 	vector<Mesh> meshes;
 	string directory;
 	bool gammaCorrection;
-	/*  Functions   */
+
+	//Data for bounding capsules.
+	BoundCapsule collider;
 	// constructor, expects a filepath to a 3D model.
 	Model(string const &path, bool gamma = false) : gammaCorrection(gamma)
 	{
@@ -31,14 +34,15 @@ public:
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
 	}
+
 	void applyTransform(glm::vec3 translate, glm::vec3 rotate, glm::vec3 scale) {
 		this->Object::applyTransform(translate, rotate, scale);
+		// do not deal with scale
 		for (int i = 0; i < children.size(); i++) {
 			children[i]->applyTransform(translate, rotate, scale);
 		}
 	}
 private:
-
 	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file 0and stores the resulting meshes in the meshes vector.
 	void loadModel(string const &path)
@@ -59,16 +63,23 @@ private:
 		processNode(scene->mRootNode, scene);
 	}
 	void calBoundingBox() {
-		glm::vec3 min(999, 999, 999); glm::vec3 max(-999, -999, -999);
+
+		glm::vec3 min = glm::vec3(999, 999, 999);
+		glm::vec3 max = glm::vec3(-999, -999, -999);
 		for (int i = 0; i < meshes.size(); i++) {
 			for (int j = 0; j < meshes[i].vertices.size(); j++) {
 				glm::vec3 v = meshes[i].vertices[j].Position;
 				min = glm::vec3(std::min(v.x, min.x), std::min(v.y, min.y), std::min(v.z, min.z));
-				max = glm::vec3(std::max(v.x, min.x), std::max(v.y, min.y), std::max(v.z, min.z));
+				max = glm::vec3(std::max(v.x, max.x), std::max(v.y, max.y), std::max(v.z, max.z));
 			}
 		}
-		printf( "min %3f %3f %3f\n", min.x, min.y, min.z);
-		printf("max %3f %3f %3f\n", max.x, max.y, max.z);
+		glm::vec3 center = 0.5f*(min + max) ;
+		float radius = abs(max.x - min.x) / 2+4;
+		float ydiff = abs(max.y - min.y);
+		glm::vec3 start = center + glm::vec3(0, ydiff / 2 - radius, 0);
+		glm::vec3 end = center -glm::vec3(0, ydiff / 2 - radius, 0);
+		collider = BoundCapsule(radius, start, end);
+		children.push_back((Object *)&collider);
 	}
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void processNode(aiNode *node, const aiScene *scene)

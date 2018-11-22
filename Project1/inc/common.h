@@ -25,7 +25,7 @@
 #include "../3rdparty/glm/glm/gtc/type_ptr.hpp"
 #include "../3rdparty/glm/glm/gtx/norm.hpp"
 #include "../3rdparty/glm/glm/gtx/rotate_vector.hpp"
-
+#include "../3rdparty/glm/glm/gtx/spline.hpp"
 
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>
